@@ -1,0 +1,79 @@
+/* =============================================
+   MELLOW UP — booking.css
+   Floor Plan · Payment · Confirmed · QR
+   ============================================= */
+
+/* FLOOR PLAN USER */
+.floor-plan-user{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:20px;max-width:640px;margin:0 auto}
+.fp-stage{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);text-align:center;padding:10px;font-size:11px;letter-spacing:2px;color:var(--text-muted);margin-bottom:16px}
+.fp-section-label{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--accent);margin-bottom:8px;display:block}
+.fp-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;justify-content:center}
+.fp-separator{border:none;border-top:1px dashed var(--border);margin:12px 0}
+.fp-entrance{text-align:right;font-size:10px;color:var(--text-dim);letter-spacing:1px;margin-bottom:4px}
+
+.table-btn{min-width:54px;height:46px;padding:4px 8px;border-radius:var(--radius-sm);border:1px solid;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--font-body)}
+.table-btn.available{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.4);color:#4ade80}
+.table-btn.available:hover{background:rgba(74,222,128,.25);border-color:#4ade80}
+.table-btn.reserved{background:var(--card);border-color:var(--border);color:var(--text-dim);cursor:not-allowed}
+.table-btn.selected{background:rgba(168,85,247,.25);border-color:var(--primary-light);color:var(--primary-light);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.table-btn.vip{min-width:66px;height:52px}
+.table-btn .seat-count{font-size:9px;font-weight:400;opacity:.7}
+
+.venue-label{text-align:center;color:var(--text-muted);font-size:12px;letter-spacing:3px;margin-bottom:16px}
+.table-legend{display:flex;gap:20px;justify-content:center;margin-bottom:16px;font-size:13px}
+.legend-item{display:flex;align-items:center;gap:6px;color:var(--text-muted)}
+.legend-item.available{color:#4ade80}
+.legend-item.reserved{color:#6b7280}
+.legend-item.selected{color:var(--primary-light)}
+.floor-footer{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-size:13px;color:var(--text-muted)}
+
+/* PAYMENT */
+.payment-summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:24px}
+.psc-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.psc-label{font-size:13px;color:var(--text-muted)}
+.psc-val{font-size:14px;font-weight:500}
+.psc-divider{border:none;border-top:1px solid var(--border);margin:8px 0}
+.total-val{font-size:22px;font-weight:700;color:var(--primary-light)}
+.pay-method-tabs{display:flex;gap:8px;margin-bottom:20px}
+.pay-tab{flex:1;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-muted);font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s}
+.pay-tab.active{background:rgba(139,43,226,.15);border-color:var(--primary);color:var(--primary-light)}
+.pay-panel{margin-bottom:20px}
+.qr-payment-wrap{display:flex;flex-direction:column;align-items:center;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.qr-payment-box{background:white;padding:16px;border-radius:var(--radius-sm);margin-bottom:16px}
+.qr-instruction{font-size:14px;color:var(--text-muted);margin-bottom:16px}
+.bank-info{width:100%;background:var(--bg3);border-radius:var(--radius-sm);padding:16px}
+.bank-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;color:var(--text-muted)}
+.bank-row.highlight{color:var(--text);font-weight:700;font-size:16px;border-top:1px solid var(--border);padding-top:10px;margin-top:6px}
+.bank-row.highlight span:last-child{color:var(--primary-light)}
+.credit-form{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.slip-upload-section{margin-bottom:24px}
+.slip-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:14px;font-weight:500}
+.slip-required{color:var(--danger);font-size:12px}
+.slip-dropzone{background:var(--card);border:2px dashed var(--border);border-radius:var(--radius);padding:32px 20px;text-align:center;cursor:pointer;transition:border-color .2s}
+.slip-dropzone:hover{border-color:var(--primary)}
+.slip-dropzone p{color:var(--text-muted);font-size:14px}
+.payment-actions{display:flex;gap:12px;margin-top:20px}
+.payment-actions .btn-outline{flex:1}
+.payment-actions .btn-primary{flex:2}
+
+/* CONFIRMED */
+.confirmed-container{max-width:520px;margin:0 auto;padding:60px 24px 40px;text-align:center}
+.confirmed-icon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 24px;box-shadow:0 0 30px rgba(139,43,226,.4)}
+.confirmed-title{font-family:var(--font-display);font-size:40px;letter-spacing:1px;margin-bottom:12px}
+.confirmed-sub{color:var(--text-muted);margin-bottom:32px}
+.qr-wrapper{background:white;border-radius:var(--radius);padding:24px;margin:0 auto 24px;width:fit-content;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.qr-wrapper p{margin-top:12px;font-size:12px;color:#555;font-family:monospace;word-break:break-all;max-width:200px;text-align:center}
+.confirmed-details{display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:left;background:var(--card);border-radius:var(--radius);padding:20px;margin-bottom:32px;border:1px solid var(--border)}
+.cd-label{font-size:12px;color:var(--text-muted);margin-bottom:4px}
+.cd-value{font-size:14px;font-weight:600}
+.confirmed-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* QR DOWNLOAD BTN */
+.qr-download-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-muted);font-size:12px;cursor:pointer;transition:all .2s;margin-top:10px}
+.qr-download-btn:hover{border-color:var(--primary-light);color:var(--primary-light)}
+
+@media(max-width:768px){
+  .confirmed-details{grid-template-columns:1fr}
+  .pay-method-tabs{flex-direction:column}
+  .payment-actions{flex-direction:column}
+}

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mellow UP</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS (load order matters) -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/booking.css">
+  <link rel="stylesheet" href="css/notifications.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR — USER
+══════════════════════════════════════════════ -->
+<nav class="navbar hidden" id="navbar">
+  <div class="nav-brand" onclick="showPage('home')">
+    <span class="brand-icon">✦</span>
+    <span class="brand-name">Mellow UP</span>
+  </div>
+  <div class="nav-links">
+    <a href="#" onclick="showPage('home')">หน้าหลัก</a>
+    <a href="#" onclick="showPage('bookings')">การจอง</a>
+    <a href="#" onclick="showPage('contact')">ติดต่อเรา</a>
+  </div>
+  <div class="nav-actions">
+    <div class="notif-bell-wrap">
+      <button class="nav-icon-btn" onclick="showPage('notifications')" title="การแจ้งเตือน">🔔</button>
+      <span class="notif-badge hidden" id="notif-badge">0</span>
+    </div>
+    <div class="nav-avatar" onclick="showPage('profile')">
+      <div class="av-fallback">👤</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR — ADMIN
+══════════════════════════════════════════════ -->
+<nav class="navbar admin-nav hidden" id="admin-navbar">
+  <div class="nav-brand"><span class="brand-icon">⚡</span><span class="brand-name">Mellow UP — Admin</span></div>
+  <div class="admin-search">
+    <input type="text" placeholder="ค้นหา..." id="admin-search-input">
+    <span>🔍</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-primary small" onclick="showModal('manual-booking-modal')">+ เพิ่มการจอง</button>
+    <div class="notif-bell-wrap">
+      <button class="nav-icon-btn" title="การแจ้งเตือนแอดมิน">🔔</button>
+      <span class="notif-badge hidden" id="admin-notif-badge">0</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: LOGIN
+══════════════════════════════════════════════ -->
+<div id="page-login" class="page active">
+  <div class="auth-container">
+    <div class="auth-hero">
+      <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80" alt="บาร์">
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="auth-body">
+      <h2 class="auth-title">ยินดีต้อนรับ</h2>
+      <div class="form-group"><input type="text"     class="form-input" id="login-email"    placeholder="อีเมลหรือชื่อผู้ใช้"></div>
+      <div class="form-group"><input type="password" class="form-input" id="login-password" placeholder="รหัสผ่าน"></div>
+      <div id="login-error" class="error-msg hidden"></div>
+      <button class="btn-primary full" onclick="handleLogin()">เข้าสู่ระบบ</button>
+      <p class="auth-divider">หรือเข้าสู่ระบบด้วย</p>
+      <div class="social-btns">
+        <button class="btn-social" onclick="handleSocialLogin('Facebook')">Facebook</button>
+        <button class="btn-social" onclick="handleSocialLogin('Twitter')">Twitter</button>
+      </div>
+      <p class="auth-footer">ยังไม่มีบัญชี? <a href="#" onclick="showPage('signup')">สมัครสมาชิก</a></p>
+      <p class="auth-footer" style="margin-top:8px">
+        <a href="#" onclick="showPage('admin-login')" style="color:#555;font-size:12px">เข้าสู่ระบบแอดมิน →</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: SIGNUP
+══════════════════════════════════════════════ -->
+<div id="page-signup" class="page">
+  <div class="auth-container">
+    <div class="auth-hero">
+      <img src="https://images.unsplash.com/photo-1545128485-c400ce7b23d5?w=800&q=80" alt="ไนท์คลับ">
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="auth-body">
+      <h2 class="auth-title">สมัครสมาชิก</h2>
+      <div class="auth-tabs">
+        <button class="tab-btn" onclick="showPage('login')">เข้าสู่ระบบ</button>
+        <button class="tab-btn active">สมัครสมาชิก</button>
+      </div>
+      <div class="form-group"><input type="text"     class="form-input" id="signup-name"     placeholder="ชื่อ-นามสกุล"></div>
+      <div class="form-group"><input type="email"    class="form-input" id="signup-email"    placeholder="อีเมล"></div>
+      <div class="form-group"><input type="password" class="form-input" id="signup-password" placeholder="รหัสผ่าน"></div>
+      <div class="form-group"><input type="password" class="form-input" id="signup-confirm"  placeholder="ยืนยันรหัสผ่าน"></div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="signup-agree">
+        <label for="signup-agree">ฉันยอมรับ <a href="#">นโยบายความเป็นส่วนตัว</a> และ <a href="#">เงื่อนไขการใช้งาน</a></label>
+      </div>
+      <div id="signup-error" class="error-msg hidden"></div>
+      <button class="btn-primary full" onclick="handleSignup()">สมัครสมาชิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: ADMIN LOGIN
+══════════════════════════════════════════════ -->
+<div id="page-admin-login" class="page">
+  <div class="auth-container">
+    <div class="auth-hero" style="background:linear-gradient(135deg,#0d0a1a,#1a0a2e);display:flex;align-items:center;justify-content:center;font-size:80px">⚡</div>
+    <div class="auth-body">
+      <h2 class="auth-title">เข้าสู่ระบบแอดมิน</h2>
+      <p style="color:#666;text-align:center;margin-bottom:20px;font-size:13px">Mellow UP — ระบบจัดการ</p>
+      <div class="form-group"><input type="text"     class="form-input" id="admin-email"    placeholder="อีเมลแอดมิน"></div>
+      <div class="form-group"><input type="password" class="form-input" id="admin-password" placeholder="รหัสผ่าน"></div>
+      <div id="admin-error" class="error-msg hidden"></div>
+      <button class="btn-primary full" onclick="handleAdminLogin()">เข้าสู่ระบบ</button>
+      <p class="auth-footer"><a href="#" onclick="showPage('login')">← กลับหน้าผู้ใช้</a></p>
+      <p style="color:#444;font-size:11px;text-align:center;margin-top:12px">admin@mellowup.com / admin123</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════════════════ -->
+<div id="page-home" class="page">
+  <div class="home-hero">
+    <img src="https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=1200&q=80" alt="Club" class="hero-bg">
+    <div class="hero-content">
+      <h1 class="hero-title">ยินดีต้อนรับสู่ Mellow UP</h1>
+      <p class="hero-sub">สัมผัสประสบการณ์ไนท์ไลฟ์ที่ดีที่สุดในเมือง</p>
+      <button class="btn-primary" onclick="showPage('book-details')">จองโต๊ะ</button>
+    </div>
+  </div>
+  <div class="home-section">
+    <h3 class="section-title">เมนูลัด</h3>
+    <div class="quick-actions">
+      <div class="action-card" onclick="showPage('book-details')">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="โต๊ะ">
+        <div class="action-label">จองโต๊ะ</div>
+      </div>
+      <div class="action-card" onclick="showPage('bookings')">
+        <img src="https://images.unsplash.com/photo-1512428813834-c702c7702b78?w=400&q=80" alt="การจอง">
+        <div class="action-label">ตรวจสอบการจอง</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: BOOK DETAILS
+══════════════════════════════════════════════ -->
+<div id="page-book-details" class="page">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button></div>
+  <div class="content-wrap narrow">
+    <h2 class="page-title">รายละเอียดการจอง</h2>
+    <div class="form-section">
+      <label class="form-label">ชื่อผู้จอง</label>
+      <input type="text" class="form-input" id="res-name" placeholder="กรอกชื่อของคุณ">
+    </div>
+    <div class="form-section">
+      <label class="form-label">วันที่</label>
+      <div class="input-icon-wrap"><input type="date" class="form-input" id="res-date"><span class="input-icon">📅</span></div>
+    </div>
+    <div class="form-section">
+      <label class="form-label">เวลา</label>
+      <div class="input-icon-wrap">
+        <select class="form-input" id="res-time">
+          <option value="">เลือกเวลา</option>
+          <option>19:00</option><option>20:00</option><option>21:00</option>
+          <option>22:00</option><option>23:00</option><option>00:00</option>
+        </select>
+        <span class="input-icon">🕐</span>
+      </div>
+    </div>
+    <div class="form-section">
+      <label class="form-label">เบอร์โทรศัพท์</label>
+      <input type="tel" class="form-input" id="res-phone" placeholder="กรอกเบอร์โทรศัพท์">
+    </div>
+    <div class="form-section">
+      <label class="form-label">จำนวนผู้เข้าร่วม</label>
+      <div class="guest-counter">
+        <button onclick="changeGuests(-1)">−</button>
+        <span id="guest-count">2</span>
+        <button onclick="changeGuests(1)">+</button>
+      </div>
+    </div>
+    <div id="book-details-error" class="error-msg hidden"></div>
+    <button class="btn-primary full" style="margin-top:32px" onclick="goToTableSelect()">ถัดไป: เลือกโต๊ะ</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: TABLE SELECT
+══════════════════════════════════════════════ -->
+<div id="page-book-table" class="page">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button></div>
+  <div class="content-wrap">
+    <h2 class="page-title" style="text-align:center">เลือกโต๊ะของคุณ</h2>
+    <p class="venue-label">MELLOW UP NIGHT CLUB</p>
+    <div class="table-legend">
+      <span class="legend-item available">● ว่าง</span>
+      <span class="legend-item reserved">● จองแล้ว</span>
+      <span class="legend-item selected">● ที่คุณเลือก</span>
+    </div>
+    <div class="floor-plan-user" id="floor-plan-user"></div>
+    <div class="floor-footer">
+      <div>
+        <span>เลือก: </span>
+        <span id="selected-table-name" style="color:#a855f7;font-weight:600">—</span>
+        <span id="selected-table-price" style="color:#888;margin-left:8px"></span>
+      </div>
+      <div><span>ที่นั่ง: </span><span id="selected-table-size" style="color:#a855f7">—</span></div>
+    </div>
+    <button class="btn-primary full" id="confirm-table-btn" onclick="goToPayment()" disabled style="margin-top:20px">
+      ยืนยันโต๊ะ → ชำระเงิน
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: PAYMENT
+══════════════════════════════════════════════ -->
+<div id="page-payment" class="page">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button></div>
+  <div class="content-wrap narrow">
+    <h2 class="page-title">ชำระเงิน</h2>
+
+    <div class="payment-summary-card">
+      <div class="psc-row"><span class="psc-label">สถานที่</span><span class="psc-val">Mellow UP</span></div>
+      <div class="psc-row"><span class="psc-label">วันที่</span><span class="psc-val" id="pay-date">—</span></div>
+      <div class="psc-row"><span class="psc-label">โต๊ะ</span><span class="psc-val" id="pay-table">—</span></div>
+      <div class="psc-row"><span class="psc-label">จำนวนผู้เข้าร่วม</span><span class="psc-val" id="pay-guests">—</span></div>
+      <div class="psc-divider"></div>
+      <div class="psc-row">
+        <span class="psc-label">ยอดชำระ (มัดจำ)</span>
+        <span class="psc-val total-val" id="pay-total">—</span>
+      </div>
+    </div>
+
+    <div class="pay-method-tabs">
+      <button class="pay-tab active" onclick="switchPayTab('promptpay',this)">📱 PromptPay</button>
+      <button class="pay-tab" onclick="switchPayTab('truemoney',this)">💰 TrueMoney</button>
+      <button class="pay-tab" onclick="switchPayTab('credit',this)">💳 บัตรเครดิต</button>
+    </div>
+
+    <div id="pay-panel-promptpay" class="pay-panel">
+      <div class="qr-payment-wrap">
+        <div class="qr-payment-box" id="payment-qr-display"></div>
+        <p class="qr-instruction">สแกน QR Code เพื่อชำระเงิน</p>
+        <div class="bank-info">
+          <div class="bank-row"><span>ชื่อบัญชี</span><span>MELLOW UP CO., LTD.</span></div>
+          <div class="bank-row"><span>เลขบัญชี</span><span>0-2345-67890-1</span></div>
+          <div class="bank-row highlight"><span>จำนวนเงิน</span><span id="pay-amount-display">฿0</span></div>
+        </div>
+      </div>
+    </div>
+    <div id="pay-panel-truemoney" class="pay-panel hidden">
+      <div style="text-align:center;padding:32px 16px">
+        <div style="font-size:48px;margin-bottom:16px">💰</div>
+        <p style="color:var(--text-muted);margin-bottom:8px">โอนผ่าน TrueMoney Wallet</p>
+        <p style="font-size:22px;font-weight:700;color:var(--primary-light)">081-234-5678</p>
+        <p style="color:var(--text-muted);font-size:13px;margin-top:8px">MELLOW UP</p>
+      </div>
+    </div>
+    <div id="pay-panel-credit" class="pay-panel hidden">
+      <div class="credit-form">
+        <div class="form-section"><label class="form-label">หมายเลขบัตร</label><input type="text" class="form-input" placeholder="0000 0000 0000 0000"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="form-section"><label class="form-label">วันหมดอายุ</label><input type="text" class="form-input" placeholder="MM/YY"></div>
+          <div class="form-section"><label class="form-label">CVV</label><input type="text" class="form-input" placeholder="000"></div>
+        </div>
+        <div class="form-section"><label class="form-label">ชื่อบนบัตร</label><input type="text" class="form-input" placeholder="ชื่อบนบัตร"></div>
+      </div>
+    </div>
+
+    <div class="slip-upload-section">
+      <div class="slip-label">
+        <span>📎 แนบสลิปการโอน</span>
+        <span class="slip-required">* จำเป็น</span>
+      </div>
+      <div class="slip-dropzone" onclick="document.getElementById('slip-file-input').click()">
+        <input type="file" id="slip-file-input" accept="image/*" style="display:none" onchange="handleSlipUpload(this)">
+        <div id="slip-placeholder">
+          <div style="font-size:36px;margin-bottom:8px">📷</div>
+          <p style="font-weight:500">คลิกเพื่ออัปโหลดสลิป</p>
+          <p style="font-size:12px;color:var(--text-dim);margin-top:4px">รองรับ JPG, PNG</p>
+        </div>
+        <div id="slip-preview" class="hidden" style="text-align:center">
+          <img id="slip-preview-img" src="" alt="slip" style="max-width:100%;max-height:200px;border-radius:8px">
+          <br><button class="btn-outline small" style="margin-top:8px" onclick="clearSlip(event)">เปลี่ยนสลิป</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="payment-error" class="error-msg hidden"></div>
+    <div class="payment-actions">
+      <button class="btn-outline" onclick="savePaymentDraft()">💾 บันทึก</button>
+      <button class="btn-primary" onclick="confirmPayment()">✓ ยืนยันการจอง</button>
+    </div>
+    <p style="font-size:12px;color:var(--text-dim);text-align:center;margin-top:12px">
+      * กรุณาแนบสลิปก่อนยืนยัน
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: CONFIRMED
+══════════════════════════════════════════════ -->
+<div id="page-confirmed" class="page">
+  <div class="confirmed-container">
+    <div class="confirmed-icon">✓</div>
+    <h2 class="confirmed-title">จองสำเร็จ!</h2>
+    <p class="confirmed-sub">การจองของคุณได้รับการยืนยันแล้ว กรุณาแสดง QR Code ที่ทางเข้า</p>
+
+    <div class="qr-wrapper">
+      <div id="qr-code-display"></div>
+      <button class="qr-download-btn" id="qr-download-btn" onclick="saveQRToPhone()">
+        ⬇ ดาวน์โหลด QR Code
+      </button>
+    </div>
+
+    <div class="confirmed-details">
+      <div class="cd-item"><span class="cd-label">หมายเลขโต๊ะ</span><span class="cd-value" id="conf-table">—</span></div>
+      <div class="cd-item"><span class="cd-label">วันที่</span><span class="cd-value" id="conf-date">—</span></div>
+      <div class="cd-item"><span class="cd-label">เวลา</span><span class="cd-value" id="conf-time">—</span></div>
+      <div class="cd-item"><span class="cd-label">ชื่อผู้จอง</span><span class="cd-value" id="conf-name">—</span></div>
+    </div>
+
+    <div class="confirmed-actions">
+      <button class="btn-outline" onclick="showPage('home')">กลับหน้าหลัก</button>
+      <button class="btn-primary" onclick="showPage('bookings')">ดูการจองทั้งหมด</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: MY BOOKINGS
+══════════════════════════════════════════════ -->
+<div id="page-bookings" class="page">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button></div>
+  <div class="content-wrap">
+    <h2 class="page-title">การจองของฉัน</h2>
+    <div id="my-bookings-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: NOTIFICATIONS
+══════════════════════════════════════════════ -->
+<div id="page-notifications" class="page">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button></div>
+  <div class="content-wrap narrow">
+    <div class="notif-header-bar">
+      <h2 class="page-title" style="margin-bottom:0">การแจ้งเตือน</h2>
+      <div class="realtime-indicator">
+        <span class="realtime-dot"></span>เรียลไทม์
+      </div>
+    </div>
+
+    <div class="notif-filter-tabs">
+      <button class="notif-filter-tab active" onclick="setNotifFilter('all',this)">ทั้งหมด</button>
+      <button class="notif-filter-tab" onclick="setNotifFilter('unread',this)">ยังไม่อ่าน</button>
+      <button class="notif-filter-tab" onclick="setNotifFilter('reminder',this)">⏰ เตือนความจำ</button>
+    </div>
+
+    <select id="notif-filter" class="hidden" onchange="renderNotificationsPage()"></select>
+
+    <div class="notif-actions-bar" style="margin-bottom:16px">
+      <button class="btn-outline small" onclick="markAllReadAndRefresh()">✓ อ่านทั้งหมด</button>
+      <button class="btn-outline small" onclick="clearUserNotifications()">🗑 ล้างทั้งหมด</button>
+    </div>
+
+    <div id="notifications-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: PROFILE
+══════════════════════════════════════════════ -->
+<div id="page-profile" class="page">
+  <div class="profile-container">
+    <div class="profile-avatar-wrap">
+      <div class="profile-avatar"><div class="pav-fallback">👤</div></div>
+      <h3 id="profile-name" class="profile-name">กำลังโหลด...</h3>
+    </div>
+    <button class="btn-outline" style="width:220px;margin:0 auto 32px;display:block" onclick="showPage('my-account')">แก้ไขโปรไฟล์</button>
+    <div class="profile-menu">
+      <div class="profile-menu-item" onclick="showPage('my-account')"><span class="pmi-icon">👤</span><span>ข้อมูลบัญชี</span><span class="pmi-arrow">›</span></div>
+      <div class="profile-menu-item" onclick="showPage('booking-history')"><span class="pmi-icon">📅</span><span>ประวัติการจอง</span><span class="pmi-arrow">›</span></div>
+      <div class="profile-menu-item" onclick="showPage('notifications')"><span class="pmi-icon">🔔</span><span>การแจ้งเตือน</span><span class="pmi-arrow">›</span></div>
+      <div class="profile-menu-item danger" onclick="handleLogout()"><span class="pmi-icon">↪</span><span>ออกจากระบบ</span><span class="pmi-arrow">›</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: MY ACCOUNT
+══════════════════════════════════════════════ -->
+<div id="page-my-account" class="page">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button></div>
+  <div class="content-wrap narrow">
+    <h2 class="page-title">ข้อมูลบัญชี</h2>
+    <div class="form-section"><label class="form-label">ชื่อ-นามสกุล</label><input type="text"  class="form-input" id="acc-fullname"></div>
+    <div class="form-section"><label class="form-label">ชื่อผู้ใช้</label>   <input type="text"  class="form-input" id="acc-username"></div>
+    <div class="form-section"><label class="form-label">อีเมล</label>        <input type="email" class="form-input" id="acc-email"></div>
+    <div class="form-section"><label class="form-label">เบอร์โทร</label>     <input type="tel"   class="form-input" id="acc-phone"></div>
+    <div class="form-section"><label class="form-label">วันเกิด</label>      <input type="date"  class="form-input" id="acc-dob"></div>
+    <div class="form-section toggle-section">
+      <span class="form-label">เปลี่ยนรหัสผ่าน</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="change-pw-toggle" onchange="togglePasswordChange()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div id="password-change-fields" class="hidden">
+      <div class="form-section"><label class="form-label">รหัสผ่านใหม่</label><input type="password" class="form-input" id="acc-new-pw" placeholder="รหัสผ่านใหม่"></div>
+      <div class="form-section"><label class="form-label">ยืนยัน</label><input type="password" class="form-input" id="acc-confirm-pw" placeholder="ยืนยัน"></div>
+    </div>
+    <div id="acc-success" class="success-msg hidden">บันทึกเรียบร้อยแล้ว!</div>
+    <button class="btn-primary" style="float:right;margin-top:20px" onclick="saveAccountDetails()">บันทึก</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: BOOKING HISTORY
+══════════════════════════════════════════════ -->
+<div id="page-booking-history" class="page">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button></div>
+  <div class="content-wrap">
+    <h2 class="page-title">ประวัติการจอง</h2>
+    <div id="booking-history-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: CONTACT
+══════════════════════════════════════════════ -->
+<div id="page-contact" class="page">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button></div>
+  <div class="content-wrap narrow">
+    <h2 class="page-title">ติดต่อเรา</h2>
+    <div class="contact-card">
+      <div class="contact-item">📍 <span>123 ถนนสีลม กรุงเทพมหานคร</span></div>
+      <div class="contact-item">📞 <span>+66 2 123 4567</span></div>
+      <div class="contact-item">✉️ <span>hello@mellowup.th</span></div>
+      <div class="contact-item">🕐 <span>เปิด ศุกร์–อาทิตย์ 20:00–04:00 น.</span></div>
+    </div>
+    <div class="form-section" style="margin-top:32px">
+      <label class="form-label">ส่งข้อความถึงเรา</label>
+      <textarea class="form-input" rows="4" placeholder="ข้อความของคุณ..."></textarea>
+    </div>
+    <button class="btn-primary full" onclick="showToast('ส่งข้อความเรียบร้อยแล้ว!')">ส่งข้อความ</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: ADMIN DASHBOARD
+══════════════════════════════════════════════ -->
+<div id="page-admin" class="page admin-page">
+  <div class="admin-layout">
+
+    <aside class="admin-sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="admin-avatar-letter">A</div>
+        <div>
+          <div class="sidebar-username" id="admin-username">แอดมิน</div>
+          <div class="sidebar-role" id="admin-role-label">ผู้ดูแลระบบ</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="sn-item active"  onclick="showAdminTab('dashboard')">📊 แดชบอร์ด</a>
+        <a class="sn-item"         onclick="showAdminTab('tables')">🗺️ จัดการโต๊ะ</a>
+        <a class="sn-item"         onclick="showAdminTab('bookings')">📋 การจอง</a>
+        <a class="sn-item"         onclick="showAdminTab('customers')">👥 ลูกค้า</a>
+        <a class="sn-item"         onclick="showAdminTab('admins')">🔐 จัดการแอดมิน</a>
+        <a class="sn-item"         onclick="showAdminTab('log')">📜 ประวัติ Log</a>
+        <a class="sn-item"         onclick="showAdminTab('reports')">📈 รายงาน</a>
+        <a class="sn-item"         onclick="showAdminTab('settings')">⚙️ ตั้งค่า</a>
+      </nav>
+      <button class="btn-outline small" style="margin:auto 16px 16px;display:block" onclick="handleAdminLogout()">ออกจากระบบ</button>
+    </aside>
+
+    <main class="admin-main">
+
+      <!-- แดชบอร์ด -->
+      <div id="admin-tab-dashboard" class="admin-tab active">
+        <div class="admin-stats">
+          <div class="stat-card"><div class="stat-label">การจองทั้งหมด</div><div class="stat-value" id="stat-total">0</div><div class="stat-change positive" id="stat-total-change">+0 วันนี้</div></div>
+          <div class="stat-card"><div class="stat-label">โต๊ะที่มีลูกค้า</div><div class="stat-value" id="stat-occupied">0</div><div class="stat-change" id="stat-occupied-sub">จาก 23 โต๊ะ</div></div>
+          <div class="stat-card"><div class="stat-label">รอตรวจสอบสลิป</div><div class="stat-value" id="stat-pending">0</div><div class="stat-change negative">รอดำเนินการ</div></div>
+          <div class="stat-card"><div class="stat-label">รายได้รวม</div><div class="stat-value" id="stat-revenue">฿0</div><div class="stat-change positive">+12% สัปดาห์นี้</div></div>
+        </div>
+        <div class="admin-grid">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>แผนผังโต๊ะ (Live)</h3>
+              <span class="live-badge"><span class="realtime-dot"></span> เรียลไทม์</span>
+            </div>
+            <div class="mini-floor-plan" id="mini-floor-plan"></div>
+            <div class="mini-floor-legend">
+              <span style="color:#4ade80;font-size:11px">● ว่าง</span>
+              <span style="color:#a855f7;font-size:11px">● จองแล้ว</span>
+              <span style="color:#ef4444;font-size:11px">● มีลูกค้า</span>
+            </div>
+          </div>
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>กิจกรรมล่าสุด</h3>
+              <a href="#" onclick="showAdminTab('bookings')" style="color:#a855f7;font-size:12px">ดูทั้งหมด</a>
+            </div>
+            <table class="mini-table">
+              <thead><tr><th>ลูกค้า</th><th>โต๊ะ</th><th>เวลา</th><th>สถานะ</th><th></th></tr></thead>
+              <tbody id="recent-activity-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- จัดการโต๊ะ -->
+      <div id="admin-tab-tables" class="admin-tab">
+        <div class="admin-tab-header">
+          <h2 class="admin-page-title">จัดการโต๊ะ</h2>
+          <button class="btn-primary small" onclick="showModal('add-table-modal')">+ เพิ่มโต๊ะ</button>
+        </div>
+        <div class="admin-floor-plan-container">
+          <div class="admin-floor-legend" style="margin-bottom:16px;display:flex;gap:16px">
+            <span class="legend-item available">● ว่าง</span>
+            <span class="legend-item reserved">● จองแล้ว</span>
+            <span style="color:#ef4444;font-size:13px">● มีลูกค้า</span>
+          </div>
+          <div class="admin-floor-plan" id="admin-floor-plan"></div>
+        </div>
+      </div>
+
+      <!-- การจอง -->
+      <div id="admin-tab-bookings" class="admin-tab">
+        <div class="admin-tab-header">
+          <h2 class="admin-page-title">การจองทั้งหมด</h2>
+          <button class="btn-primary small" onclick="showModal('manual-booking-modal')">+ เพิ่มการจอง</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>รหัส</th><th>ลูกค้า</th><th>โต๊ะ</th><th>วันที่</th><th>เวลา</th><th>คน</th><th>สถานะ</th><th>สลิป</th><th>จัดการ</th></tr></thead>
+            <tbody id="admin-bookings-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ลูกค้า -->
+      <div id="admin-tab-customers" class="admin-tab">
+        <div class="admin-tab-header">
+          <h2 class="admin-page-title">ลูกค้า</h2>
+          <button class="btn-primary small" onclick="showModal('add-customer-modal')">+ เพิ่มลูกค้า</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>ชื่อ</th><th>อีเมล</th><th>เบอร์โทร</th><th>การจอง</th><th>สมัครเมื่อ</th><th>จัดการ</th></tr></thead>
+            <tbody id="admin-customers-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- จัดการแอดมิน -->
+      <div id="admin-tab-admins" class="admin-tab">
+        <div class="admin-tab-header">
+          <h2 class="admin-page-title">จัดการแอดมิน</h2>
+        </div>
+        <div class="admin-two-col">
+          <div class="settings-section">
+            <h3 class="settings-section-title">👤 รายชื่อแอดมิน</h3>
+            <div id="admin-management-list"></div>
+          </div>
+          <div class="settings-section">
+            <h3 class="settings-section-title">➕ เพิ่มแอดมินใหม่</h3>
+            <div class="form-section"><label class="form-label">ชื่อ-นามสกุล</label><input type="text" class="form-input" id="na-name" placeholder="เช่น สมชาย ใจดี"></div>
+            <div class="form-section"><label class="form-label">อีเมล</label><input type="email" class="form-input" id="na-email" placeholder="admin2@mellowup.com"></div>
+            <div class="form-section">
+              <label class="form-label">รหัสผ่าน</label>
+              <div style="position:relative">
+                <input type="password" class="form-input" id="na-password" placeholder="อย่างน้อย 6 ตัวอักษร">
+                <button type="button" onclick="togglePwVisible('na-password',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer">👁</button>
+              </div>
+            </div>
+            <div class="form-section">
+              <label class="form-label">ระดับสิทธิ์</label>
+              <select class="form-input" id="na-role">
+                <option value="admin">แอดมิน</option>
+                <option value="superadmin">ซูเปอร์แอดมิน</option>
+              </select>
+            </div>
+            <button class="btn-primary" onclick="addAdmin()">+ เพิ่มแอดมิน</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ประวัติ Log -->
+      <div id="admin-tab-log" class="admin-tab">
+        <div class="admin-tab-header">
+          <h2 class="admin-page-title">ประวัติการใช้งาน</h2>
+          <button class="btn-outline small" onclick="clearAdminLog()">🗑 ล้างประวัติ</button>
+        </div>
+        <div class="log-filter-bar">
+          <select class="form-input" id="log-filter-admin" onchange="renderAdminLog()" style="width:auto;padding:8px 12px">
+            <option value="">— แอดมินทั้งหมด —</option>
+          </select>
+          <select class="form-input" id="log-filter-type" onchange="renderAdminLog()" style="width:auto;padding:8px 12px">
+            <option value="">— ประเภทกิจกรรมทั้งหมด —</option>
+            <option value="login">เข้าสู่ระบบ</option>
+            <option value="booking">การจอง</option>
+            <option value="customer">ลูกค้า</option>
+            <option value="table">โต๊ะ</option>
+            <option value="admin">แอดมิน</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>วันเวลา</th><th>แอดมิน</th><th>กิจกรรม</th><th>รายละเอียด</th></tr></thead>
+            <tbody id="admin-log-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- รายงาน -->
+      <div id="admin-tab-reports" class="admin-tab">
+        <h2 class="admin-page-title">รายงาน</h2>
+        <div class="admin-stats">
+          <div class="stat-card"><div class="stat-label">รายได้ทั้งหมด</div><div class="stat-value" id="rep-revenue">฿0</div></div>
+          <div class="stat-card"><div class="stat-label">การจองทั้งหมด</div><div class="stat-value" id="rep-bookings">0</div></div>
+          <div class="stat-card"><div class="stat-label">ลูกค้าทั้งหมด</div><div class="stat-value" id="rep-customers">0</div></div>
+          
+        </div>
+      </div>
+
+      <!-- ตั้งค่า -->
+      <div id="admin-tab-settings" class="admin-tab">
+        <h2 class="admin-page-title">ตั้งค่า</h2>
+        <div style="max-width:500px">
+          <div class="form-section"><label class="form-label">ชื่อสถานที่</label><input type="text" class="form-input" value="Mellow UP"></div>
+          <div class="form-section"><label class="form-label">เวลาเปิด</label><input type="time" class="form-input" value="20:00"></div>
+          <div class="form-section"><label class="form-label">เวลาปิด</label><input type="time" class="form-input" value="04:00"></div>
+          <div class="form-section"><label class="form-label">ค่ามัดจำเริ่มต้น (฿)</label><input type="number" class="form-input" value="500"></div>
+          <button class="btn-primary" onclick="showToast('บันทึกการตั้งค่าเรียบร้อยแล้ว!')">บันทึกการตั้งค่า</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════════ -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal()"></div>
+
+<!-- เพิ่มการจอง -->
+<div id="manual-booking-modal" class="modal hidden">
+  <div class="modal-header"><h3>เพิ่มการจอง</h3><button onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <div class="form-section"><label class="form-label">ชื่อลูกค้า</label><input type="text" class="form-input" id="mb-name" placeholder="ชื่อ"></div>
+    <div class="form-section"><label class="form-label">โต๊ะ</label><select class="form-input" id="mb-table"></select></div>
+    <div class="form-section"><label class="form-label">วันที่</label><input type="date" class="form-input" id="mb-date"></div>
+    <div class="form-section"><label class="form-label">เวลา</label><input type="time" class="form-input" id="mb-time" value="21:00"></div>
+    <div class="form-section"><label class="form-label">จำนวนคน</label><input type="number" class="form-input" id="mb-guests" value="2" min="1" max="20"></div>
+    <div class="form-section"><label class="form-label">สถานะ</label>
+      <select class="form-input" id="mb-status">
+        <option value="upcoming">กำลังจะมา</option>
+        <option value="checked-in">เช็คอินแล้ว</option>
+        <option value="no-show">ไม่มา</option>
+      </select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-outline" onclick="closeModal()">ยกเลิก</button>
+    <button class="btn-primary" onclick="addManualBooking()">เพิ่มการจอง</button>
+  </div>
+</div>
+
+<!-- เพิ่มลูกค้า -->
+<div id="add-customer-modal" class="modal hidden">
+  <div class="modal-header"><h3>เพิ่มลูกค้า</h3><button onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <div class="form-section"><label class="form-label">ชื่อ-นามสกุล</label><input type="text"  class="form-input" id="nc-name"     placeholder="ชื่อ-นามสกุล"></div>
+    <div class="form-section"><label class="form-label">อีเมล</label>        <input type="email" class="form-input" id="nc-email"    placeholder="อีเมล"></div>
+    <div class="form-section"><label class="form-label">เบอร์โทร</label>     <input type="tel"   class="form-input" id="nc-phone"    placeholder="เบอร์โทร"></div>
+    <div class="form-section"><label class="form-label">รหัสผ่าน</label>     <input type="password" class="form-input" id="nc-password" placeholder="รหัสผ่าน"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-outline" onclick="closeModal()">ยกเลิก</button>
+    <button class="btn-primary" onclick="addCustomer()">เพิ่มลูกค้า</button>
+  </div>
+</div>
+
+<!-- เพิ่มโต๊ะ -->
+<div id="add-table-modal" class="modal hidden">
+  <div class="modal-header"><h3>เพิ่มโต๊ะ</h3><button onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <div class="form-section"><label class="form-label">รหัสโต๊ะ (เช่น T-15)</label><input type="text" class="form-input" id="nt-id" placeholder="T-15"></div>
+    <div class="form-section"><label class="form-label">โซน</label>
+      <select class="form-input" id="nt-section">
+        <option value="vip">VIP</option><option value="regular" selected>ทั่วไป</option><option value="bar">บาร์</option>
+      </select>
+    </div>
+    <div class="form-section"><label class="form-label">จำนวนที่นั่ง</label><input type="number" class="form-input" id="nt-seats" value="4" min="1" max="20"></div>
+    <div class="form-section"><label class="form-label">มัดจำ (฿)</label><input type="number" class="form-input" id="nt-deposit" value="500"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-outline" onclick="closeModal()">ยกเลิก</button>
+    <button class="btn-primary" onclick="addTable()">เพิ่มโต๊ะ</button>
+  </div>
+</div>
+
+<!-- ดูสลิป -->
+<div id="slip-view-modal" class="modal hidden">
+  <div class="modal-header"><h3>สลิปการชำระเงิน</h3><button onclick="closeModal()">✕</button></div>
+  <div class="modal-body" style="text-align:center">
+    <img id="slip-view-img" src="" alt="slip" style="max-width:100%;border-radius:8px">
+  </div>
+  <div class="modal-footer"><button class="btn-outline" onclick="closeModal()">ปิด</button></div>
+</div>
+
+<!-- รายละเอียดโต๊ะ -->
+<div id="table-admin-modal" class="modal hidden">
+  <div class="modal-header"><h3>รายละเอียดโต๊ะ</h3><button onclick="closeModal()">✕</button></div>
+  <div class="modal-body" id="tmodal-body"></div>
+  <div class="modal-footer">
+    <button class="btn-danger" id="tmodal-delete-btn">🗑 ลบโต๊ะ</button>
+    <button class="btn-outline" onclick="closeModal()">ปิด</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast hidden"></div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT — load order matters!
+══════════════════════════════════════════════ -->
+<script src="js/db.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/qr.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/router.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/booking.js"></script>
+<script src="js/payment.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/admin-tables.js"></script>
+<script src="js/admin-dashboard.js"></script>
+<script src="js/admin-admins.js"></script>
+<script src="js/init.js"></script>
+<script>
+// ── Extra UI helpers not worth a full module ──
+function setNotifFilter(val, btn) {
+  document.querySelectorAll('.notif-filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  // Map button values to hidden select
+  const sel = document.getElementById('notif-filter');
+  sel.value = val;
+  renderNotificationsPage();
+}
+
+function markAllReadAndRefresh() {
+  if (currentUser) markAllRead(currentUser.id);
+  renderNotificationsPage();
+  showToast('อ่านการแจ้งเตือนทั้งหมดแล้ว ✓');
+}
+
+function clearUserNotifications() {
+  if (!currentUser) return;
+  if (!confirm('ลบการแจ้งเตือนทั้งหมด?')) return;
+  const all = DB.getArr('notifications').filter(n => n.userId !== currentUser.id);
+  DB.set('notifications', all);
+  updateNotificationBadge();
+  renderNotificationsPage();
+  showToast('ล้างการแจ้งเตือนเรียบร้อยแล้ว');
+}
+</script>
+</body>
+</html>
